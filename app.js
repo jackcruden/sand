@@ -331,7 +331,7 @@ class Game {
         x = Math.round(x / this.particle_size)
         y = Math.round(y / this.particle_size)
 
-        let cursor_size = 5
+        let cursor_size = Math.floor(this.size / 20)
         for (let i = -cursor_size; i < cursor_size / 2; i++) {
             for (let j = -cursor_size; j < cursor_size / 2; j++) {
                 this.setParticle(x, y, i, j, new Particle(this.selection))
@@ -340,7 +340,7 @@ class Game {
     }
 }
 
-let game = new Game(canvas, 150,{
+let game = new Game(canvas, 200,{
     interval: 1000 / 60, // FPS
 })
 
