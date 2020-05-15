@@ -59,18 +59,6 @@ class Particle {
     iterated(iteration) {
         return this.iteration === iteration
     }
-
-    shouldDraw(iteration) {
-        // If static particle, return true
-        if ([
-            Type.Wall,
-            Type.Tap,
-        ].includes(this.type)) {
-            return true
-        }
-
-        return this.iterated(iteration)
-    }
 }
 
 class Game {
@@ -177,6 +165,7 @@ class Game {
             for (let y = 0; y < this.size; y++) {
                 if (
                     this.particles[x * this.size + y].type !== Type.Empty &&
+                    this.particles[x * this.size + y].type !== Type.Wall &&
                     !this.particles[x * this.size + y].iterated(this.iteration)
                 ) {
                     let index = x * this.size + y
@@ -294,6 +283,7 @@ class Game {
     draw() {
         if (!this.playing) return
 
+        // Only draw white background if we're drawing from scratch
         // Clear background
         // this.context.fillStyle = 'white';
         // this.context.fillRect(0, 0, this.particle_size * this.size, this.particle_size * this.size)
@@ -301,11 +291,13 @@ class Game {
         // Draw particles
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
+                // Only draw all particles if we're drawing from scratch
                 // if (this.particles[x * this.size + y].type !== Type.Empty) {
                 //     ctx.fillStyle = this.particles[x * this.size + y].colour()
                 //     ctx.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
                 // }
-                if (this.particles[x * this.size + y].shouldDraw(this.iteration)) {
+
+                if (this.particles[x * this.size + y].iterated(this.iteration)) {
                     ctx.fillStyle = this.particles[x * this.size + y].colour()
                     ctx.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
                 }
@@ -340,7 +332,7 @@ class Game {
     }
 }
 
-let game = new Game(canvas, 200,{
+let game = new Game(canvas, 300,{
     interval: 1000 / 60, // FPS
 })
 
