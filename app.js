@@ -5,17 +5,17 @@ const ctx = canvas.getContext('2d', {
     alpha: false
 })
 
-ctx.fillStyle = 'white';
-ctx.fillRect(0, 0, canvas.width, canvas.height)
-
 // Declare types
 let Type = {
     Empty: 'Empty',
     Wall: 'Wall',
+
     Sand: 'Sand',
     Water: 'Water',
-    Tap: 'Tap',
     Ice: 'Ice',
+    Plant: 'Plant',
+
+    Tap: 'Tap',
 }
 
 class Particle {
@@ -48,6 +48,8 @@ class Particle {
             colour = { r: 0, g: 0, b: 0 }
         } else if (this.type === Type.Ice) {
             colour = { r: 150, g: 150, b: 255}
+        } else if (this.type === Type.Plant) {
+            colour = { r: 50, g: 200, b: 50}
         }
 
         // Apply brightness
@@ -90,6 +92,10 @@ class Game {
                 this.particles[x * this.size + y] = new Particle(Type.Empty)
             }
         }
+
+        // Initialise background white
+        this.context.fillStyle = 'white';
+        this.context.fillRect(0, 0, canvas.width, canvas.height)
 
         window.setInterval(() => {
             game.countIterations()
@@ -134,12 +140,34 @@ class Game {
         return this.particles[nx * this.size + ny]
     }
 
+    setNeighbour(x, y, direction, particle) {
+        if (direction === 'top' || direction === 'all') {
+            this.setParticle(x, y, 0, -1, particle)
+        }
+        if (direction === 'left' || direction === 'all') {
+            this.setParticle(x, y, -1, 0, particle)
+        }
+        if (direction === 'right' || direction === 'all') {
+            this.setParticle(x, y, 1, 0, particle)
+        }
+        if (direction === 'bottom' || direction === 'all') {
+            this.setParticle(x, y, 0, 1, particle)
+        }
+    }
+
     setParticle(x, y, ox, oy, particle) {
         let nx = x + ox
         let ny = y + oy
 
         this.particles[nx * this.size + ny] = particle
         this.particles[nx * this.size + ny].iteration = this.iteration
+    }
+
+    setParticleIf(x, y, ox, oy, if_type, particle) {
+        if (this.getNeighbour(x, y, ox, oy).type === if_type) {
+            this.setParticle(x, y, ox, oy, particle)
+            this.getNeighbour(x, y, ox, oy).iteration = this.iteration
+        }
     }
 
     step() {
@@ -290,6 +318,41 @@ class Game {
                         // Look down
                         } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
                             this.setParticle(x, y, 0, 1, new Particle(Type.Ice))
+                        }
+
+                    // Plant
+                    } else if (current.type === Type.Plant && chance > 80) {
+                        // Look up
+                        if (this.getNeighbour(x, y, 0, -1).type === Type.Water) {
+                            this.setParticle(x, y, 0, -1, new Particle(Type.Plant))
+                            // Set other neighbours to empty
+                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Empty))
+                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Empty))
+                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Empty))
+
+                        // Look left
+                        } else if (this.getNeighbour(x, y, -1, 0).type === Type.Water) {
+                            this.setParticle(x, y, -1, 0, new Particle(Type.Plant))
+                            // Set other neighbours to empty
+                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Plant))
+
+                        // Look right
+                        } else if (this.getNeighbour(x, y, 1, 0).type === Type.Water) {
+                            this.setParticle(x, y, 1, 0, new Particle(Type.Plant))
+                            // Set other neighbours to empty
+                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Plant))
+
+                        // Look down
+                        } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
+                            this.setParticle(x, y, 0, 1, new Particle(Type.Plant))
+                            // Set other neighbours to empty
+                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Plant))
                         }
                     }
                 }
