@@ -15,6 +15,7 @@ let Type = {
     Sand: 'Sand',
     Water: 'Water',
     Tap: 'Tap',
+    Ice: 'Ice',
 }
 
 class Particle {
@@ -45,6 +46,8 @@ class Particle {
             colour = { r: 0, g: 0, b: 200 }
         } else if (this.type === Type.Tap) {
             colour = { r: 0, g: 0, b: 0 }
+        } else if (this.type === Type.Ice) {
+            colour = { r: 150, g: 150, b: 255}
         }
 
         // Apply brightness
@@ -170,6 +173,7 @@ class Game {
                 ) {
                     let index = x * this.size + y
                     let current = this.getNeighbour(x, y, 0, 0)
+                    let chance = Math.random() * 100
                     let direction = Math.floor(Math.random() * Math.floor(3)) - 1
 
                     // If sand
@@ -268,6 +272,25 @@ class Game {
                                 this.setParticle(x, y, 0, -1, new Particle(current.dispenses))
                             }
                         }
+
+                    // Ice
+                    } else if (current.type === Type.Ice && chance > 94) {
+                        // Look up
+                        if (this.getNeighbour(x, y, 0, -1).type === Type.Water) {
+                            this.setParticle(x, y, 0, -1, new Particle(Type.Ice))
+
+                        // Look left
+                        } else if (this.getNeighbour(x, y, -1, 0).type === Type.Water) {
+                            this.setParticle(x, y, -1, 0, new Particle(Type.Ice))
+
+                        // Look right
+                        } else if (this.getNeighbour(x, y, 1, 0).type === Type.Water) {
+                            this.setParticle(x, y, 1, 0, new Particle(Type.Ice))
+
+                        // Look down
+                        } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
+                            this.setParticle(x, y, 0, 1, new Particle(Type.Ice))
+                        }
                     }
                 }
             }
@@ -332,7 +355,7 @@ class Game {
     }
 }
 
-let game = new Game(canvas, 300,{
+let game = new Game(canvas, 200,{
     interval: 1000 / 60, // FPS
 })
 
@@ -363,12 +386,14 @@ window.addEventListener('keypress', event => {
         game.selection = Type.Empty
     } else if (event.key === '2') {
         game.selection = Type.Wall
-    } else if (event.key === '3') {
+    } else if (event.key === 's') {
         game.selection = Type.Sand
-    } else if (event.key === '4') {
+    } else if (event.key === 'w') {
         game.selection = Type.Water
-    } else if (event.key === '5') {
+    } else if (event.key === '3') {
         game.selection = Type.Tap
+    } else if (event.key === 'i') {
+        game.selection = Type.Ice
     }
 })
 
