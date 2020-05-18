@@ -2,10 +2,45 @@
 <html>
 <head>
     <title>Sand</title>
+
+    <style>
+        #buttons {
+            padding: 5px;
+        }
+
+        button {
+            display: block;
+            margin-bottom: 5px;
+            padding: 5px;
+            width: 100%;
+            font-size: 1.5em;
+
+            -webkit-appearance: none;
+        }
+
+        .divider {
+            margin: 20px;
+        }
+    </style>
 </head>
 <body style="background-color: black;">
-    <div style="width: 600px; height: 600px; margin: 0 auto; background-color: white;">
+    <div style="display: flex; width: 800px; height: 600px; margin: 0 auto; background-color: white;">
         <canvas id="canvas" width="600" height="600"></canvas>
+
+        <div id="buttons" style="width: 200px; background-color: gray;">
+            <button onclick="game.selection = Type.Empty">Empty</button>
+            <button onclick="game.selection = Type.Wall">🧱 Wall</button>
+
+            <div class="divider"></div>
+
+            <button onclick="game.selection = Type.Sand">⏳ Sand</button>
+            <button onclick="game.selection = Type.Water">💧 Water</button>
+            <button onclick="game.selection = Type.Ice">🧊 Ice</button>
+
+            <div class="divider"></div>
+
+            <button onclick="game.selection = Type.Tap">🚰 Tap</button>
+        </div>
     </div>
 
     <script src="app.js"></script>
