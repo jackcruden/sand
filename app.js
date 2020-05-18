@@ -199,7 +199,6 @@ class Game {
                     this.particles[x * this.size + y].type !== Type.Wall &&
                     !this.particles[x * this.size + y].iterated(this.iteration)
                 ) {
-                    let index = x * this.size + y
                     let current = this.getNeighbour(x, y, 0, 0)
                     let chance = Math.random() * 100
                     let direction = Math.floor(Math.random() * Math.floor(3)) - 1
