@@ -5,8 +5,8 @@ const ctx = canvas.getContext('2d', {
     alpha: false
 })
 
-// Declare types
-let Type = {
+// Declare elements
+let Element = {
     Empty: 'Empty',
     Wall: 'Wall',
 
@@ -14,18 +14,33 @@ let Type = {
     Water: 'Water',
     Ice: 'Ice',
     Plant: 'Plant',
+    Fire: 'Fire',
 
     Tap: 'Tap',
 }
 
+let State = {
+    Gas: 'Gas',
+    Liquid: 'Liquid',
+    Solid: 'Solid',
+}
+
 class Particle {
-    constructor(type, iteration = 0) {
-        this.type = type
+    constructor(element, iteration = 0) {
+        this.element = element
         this.iteration = iteration
         this.brightness = 0.9 + Math.random() * 0.1
 
         // Specific to Tap
         this.dispenses = undefined
+    }
+
+    isDead() {
+        if (this.element === Element.Fire) {
+            return Math.random() * 1000 > 950
+        }
+
+        return false
     }
 
     // Calculate colour
@@ -36,20 +51,22 @@ class Particle {
             b: 255,
         }
 
-        if (this.type === Type.Empty) {
+        if (this.element === Element.Empty) {
             return 'rgb(255, 255, 255)'
-        } else if (this.type === Type.Wall) {
+        } else if (this.element === Element.Wall) {
             colour = { r: 100, g: 100, b: 100 }
-        } else if (this.type === Type.Sand) {
+        } else if (this.element === Element.Sand) {
             colour = { r: 150, g: 150, b: 0 }
-        } else if (this.type === Type.Water) {
+        } else if (this.element === Element.Water) {
             colour = { r: 0, g: 0, b: 200 }
-        } else if (this.type === Type.Tap) {
+        } else if (this.element === Element.Tap) {
             colour = { r: 0, g: 0, b: 0 }
-        } else if (this.type === Type.Ice) {
+        } else if (this.element === Element.Ice) {
             colour = { r: 150, g: 150, b: 255}
-        } else if (this.type === Type.Plant) {
+        } else if (this.element === Element.Plant) {
             colour = { r: 50, g: 200, b: 50}
+        } else if (this.element === Element.Fire) {
+            colour = { r: 250, g: 100, b: 100}
         }
 
         // Apply brightness
@@ -78,7 +95,7 @@ class Game {
         this.particle_size = canvas.width / this.size
         this.playing = false
         this.particles = new Array(this.size * this.size)
-        this.selection = Type.Wall
+        this.selection = Element.Wall
         this.iteration = 0
         this.last_iteration = 0
         this.fps = 0
@@ -89,7 +106,7 @@ class Game {
 
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
-                this.particles[x * this.size + y] = new Particle(Type.Empty)
+                this.particles[x * this.size + y] = new Particle(Element.Empty)
             }
         }
 
@@ -134,7 +151,7 @@ class Game {
             (x === 0 && ox === -1) || // Left
             (x === this.size - 1 && ox === 1) // Right
         ) {
-            return new Particle(Type.Wall)
+            return new Particle(Element.Wall)
         }
 
         return this.particles[nx * this.size + ny]
@@ -163,8 +180,8 @@ class Game {
         this.particles[nx * this.size + ny].iteration = this.iteration
     }
 
-    setParticleIf(x, y, ox, oy, if_type, particle) {
-        if (this.getNeighbour(x, y, ox, oy).type === if_type) {
+    setParticleIf(x, y, ox, oy, if_element, particle) {
+        if (this.getNeighbour(x, y, ox, oy).element === if_element) {
             this.setParticle(x, y, ox, oy, particle)
             this.getNeighbour(x, y, ox, oy).iteration = this.iteration
         }
@@ -195,8 +212,8 @@ class Game {
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
                 if (
-                    this.particles[x * this.size + y].type !== Type.Empty &&
-                    this.particles[x * this.size + y].type !== Type.Wall &&
+                    this.particles[x * this.size + y].element !== Element.Empty &&
+                    this.particles[x * this.size + y].element !== Element.Wall &&
                     !this.particles[x * this.size + y].iterated(this.iteration)
                 ) {
                     let current = this.getNeighbour(x, y, 0, 0)
@@ -204,154 +221,178 @@ class Game {
                     let direction = Math.floor(Math.random() * Math.floor(3)) - 1
 
                     // If sand
-                    if (current.type === Type.Sand) {
+                    if (current.element === Element.Sand) {
                         // If can fall
-                        if (this.getNeighbour(x, y, 0, 1).type === Type.Empty) {
+                        if (this.getNeighbour(x, y, 0, 1).element === Element.Empty) {
                             this.setParticle(x, y, 0, 1, current)
-                            this.setParticle(x, y, 0, 0, new Particle(Type.Empty))
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
 
                         // If can fall through water
-                        } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
+                        } else if (this.getNeighbour(x, y, 0, 1).element === Element.Water) {
                             let below = this.getNeighbour(x, y, 0, 1)
                             this.setParticle(x, y, 0, 1, current)
                             this.setParticle(x, y, 0, 0, below)
 
                         // If can fall sideways
-                        } else if (this.getNeighbour(x, y, direction, 1).type === Type.Empty) {
+                        } else if (this.getNeighbour(x, y, direction, 1).element === Element.Empty) {
                             this.setParticle(x, y, direction, 1, current)
-                            this.setParticle(x, y, 0, 0, new Particle(Type.Empty))
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
                         }
 
                     // If water
-                    } else if (current.type === Type.Water) {
+                    } else if (current.element === Element.Water) {
                         // If can fall
-                        if (this.getNeighbour(x, y, 0, 1).type === Type.Empty) {
+                        if (this.getNeighbour(x, y, 0, 1).element === Element.Empty) {
                             this.setParticle(x, y, 0, 1, current)
-                            this.setParticle(x, y, 0, 0, new Particle(Type.Empty))
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
 
                         // If can fall sideways
-                        } else if (this.getNeighbour(x, y, direction, 1).type === Type.Empty) {
+                        } else if (this.getNeighbour(x, y, direction, 1).element === Element.Empty) {
                             this.setParticle(x, y, direction, 1, current)
-                            this.setParticle(x, y, 0, 0, new Particle(Type.Empty))
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
 
                         // If can move sideways
-                        } else if (this.getNeighbour(x, y, direction, 0).type === Type.Empty) {
+                        } else if (this.getNeighbour(x, y, direction, 0).element === Element.Empty) {
                             this.setParticle(x, y, direction, 0, current)
-                            this.setParticle(x, y, 0, 0, new Particle(Type.Empty))
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
                         }
 
                     // If tap
-                    } else if (current.type === Type.Tap) {
+                    } else if (current.element === Element.Tap) {
                         // If we don't have something to dispense, look for it
                         if (!current.dispenses) {
                             // Look up
-                            if (this.getNeighbour(x, y, 0, -1).type !== Type.Empty) {
-                                if (this.getNeighbour(x, y, 0, -1).type === Type.Tap) {
+                            if (this.getNeighbour(x, y, 0, -1).element !== Element.Empty) {
+                                if (this.getNeighbour(x, y, 0, -1).element === Element.Tap) {
                                     current.dispenses = this.getNeighbour(x, y, 0, -1).dispenses
                                 } else {
-                                    current.dispenses = this.getNeighbour(x, y, 0, -1).type
+                                    current.dispenses = this.getNeighbour(x, y, 0, -1).element
                                 }
 
                             // Look left
-                            } else if (this.getNeighbour(x, y, -1, 0).type !== Type.Empty) {
-                                if (this.getNeighbour(x, y, -1, 0).type === Type.Tap) {
+                            } else if (this.getNeighbour(x, y, -1, 0).element !== Element.Empty) {
+                                if (this.getNeighbour(x, y, -1, 0).element === Element.Tap) {
                                     current.dispenses = this.getNeighbour(x, y, -1, 0).dispenses
                                 } else {
-                                    current.dispenses = this.getNeighbour(x, y, -1, 0).type
+                                    current.dispenses = this.getNeighbour(x, y, -1, 0).element
                                 }
 
                             // Look right
-                            } else if (this.getNeighbour(x, y, 1, 0).type !== Type.Empty) {
-                                if (this.getNeighbour(x, y, 1, 0).type === Type.Tap) {
+                            } else if (this.getNeighbour(x, y, 1, 0).element !== Element.Empty) {
+                                if (this.getNeighbour(x, y, 1, 0).element === Element.Tap) {
                                     current.dispenses = this.getNeighbour(x, y, 1, 0).dispenses
                                 } else {
-                                    current.dispenses = this.getNeighbour(x, y, 1, 0).type
+                                    current.dispenses = this.getNeighbour(x, y, 1, 0).element
                                 }
 
                             // Look down
-                            } else if (this.getNeighbour(x, y, 0, 1).type !== Type.Empty) {
-                                if (this.getNeighbour(x, y, 0, 1).type === Type.Tap) {
+                            } else if (this.getNeighbour(x, y, 0, 1).element !== Element.Empty) {
+                                if (this.getNeighbour(x, y, 0, 1).element === Element.Tap) {
                                     current.dispenses = this.getNeighbour(x, y, 0, 1).dispenses
                                 } else {
-                                    current.dispenses = this.getNeighbour(x, y, 0, 1).type
+                                    current.dispenses = this.getNeighbour(x, y, 0, 1).element
                                 }
                             }
 
                         // We do have something to dispense
                         } else {
                             // Dispense down
-                            if (this.getNeighbour(x, y, 0, 1).type === Type.Empty) {
+                            if (this.getNeighbour(x, y, 0, 1).element === Element.Empty) {
                                 this.setParticle(x, y, 0, 1, new Particle(current.dispenses))
                             }
 
                             // Dispense left
-                            if (this.getNeighbour(x, y, -1, 0).type === Type.Empty) {
+                            if (this.getNeighbour(x, y, -1, 0).element === Element.Empty) {
                                 this.setParticle(x, y, -1, 0, new Particle(current.dispenses))
                             }
 
                             // Dispense right
-                            if (this.getNeighbour(x, y, 1, 0).type === Type.Empty) {
+                            if (this.getNeighbour(x, y, 1, 0).element === Element.Empty) {
                                 this.setParticle(x, y, 1, 0, new Particle(current.dispenses))
                             }
 
                             // Dispense up
-                            if (this.getNeighbour(x, y, 0, -1).type === Type.Empty) {
+                            if (this.getNeighbour(x, y, 0, -1).element === Element.Empty) {
                                 this.setParticle(x, y, 0, -1, new Particle(current.dispenses))
                             }
                         }
 
                     // Ice
-                    } else if (current.type === Type.Ice && chance > 94) {
+                    } else if (current.element === Element.Ice && chance > 94) {
                         // Look up
-                        if (this.getNeighbour(x, y, 0, -1).type === Type.Water) {
-                            this.setParticle(x, y, 0, -1, new Particle(Type.Ice))
+                        if (this.getNeighbour(x, y, 0, -1).element === Element.Water) {
+                            this.setParticle(x, y, 0, -1, new Particle(Element.Ice))
 
                         // Look left
-                        } else if (this.getNeighbour(x, y, -1, 0).type === Type.Water) {
-                            this.setParticle(x, y, -1, 0, new Particle(Type.Ice))
+                        } else if (this.getNeighbour(x, y, -1, 0).element === Element.Water) {
+                            this.setParticle(x, y, -1, 0, new Particle(Element.Ice))
 
                         // Look right
-                        } else if (this.getNeighbour(x, y, 1, 0).type === Type.Water) {
-                            this.setParticle(x, y, 1, 0, new Particle(Type.Ice))
+                        } else if (this.getNeighbour(x, y, 1, 0).element === Element.Water) {
+                            this.setParticle(x, y, 1, 0, new Particle(Element.Ice))
 
                         // Look down
-                        } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
-                            this.setParticle(x, y, 0, 1, new Particle(Type.Ice))
+                        } else if (this.getNeighbour(x, y, 0, 1).element === Element.Water) {
+                            this.setParticle(x, y, 0, 1, new Particle(Element.Ice))
                         }
 
                     // Plant
-                    } else if (current.type === Type.Plant && chance > 80) {
+                    } else if (current.element === Element.Plant && chance > 80) {
                         // Look up
-                        if (this.getNeighbour(x, y, 0, -1).type === Type.Water) {
-                            this.setParticle(x, y, 0, -1, new Particle(Type.Plant))
+                        if (this.getNeighbour(x, y, 0, -1).element === Element.Water) {
+                            this.setParticle(x, y, 0, -1, new Particle(Element.Plant))
                             // Set other neighbours to empty
-                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Empty))
-                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Empty))
-                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Empty))
+                            this.setParticleIf(x, y, -1, 0, Element.Water, new Particle(Element.Empty))
+                            this.setParticleIf(x, y, 1, 0, Element.Water, new Particle(Element.Empty))
+                            this.setParticleIf(x, y, 0, 1, Element.Water, new Particle(Element.Empty))
 
                         // Look left
-                        } else if (this.getNeighbour(x, y, -1, 0).type === Type.Water) {
-                            this.setParticle(x, y, -1, 0, new Particle(Type.Plant))
+                        } else if (this.getNeighbour(x, y, -1, 0).element === Element.Water) {
+                            this.setParticle(x, y, -1, 0, new Particle(Element.Plant))
                             // Set other neighbours to empty
-                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 0, -1, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, 1, 0, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, 0, 1, Element.Water, new Particle(Element.Plant))
 
                         // Look right
-                        } else if (this.getNeighbour(x, y, 1, 0).type === Type.Water) {
-                            this.setParticle(x, y, 1, 0, new Particle(Type.Plant))
+                        } else if (this.getNeighbour(x, y, 1, 0).element === Element.Water) {
+                            this.setParticle(x, y, 1, 0, new Particle(Element.Plant))
                             // Set other neighbours to empty
-                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, 0, 1, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 0, -1, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, -1, 0, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, 0, 1, Element.Water, new Particle(Element.Plant))
 
                         // Look down
-                        } else if (this.getNeighbour(x, y, 0, 1).type === Type.Water) {
-                            this.setParticle(x, y, 0, 1, new Particle(Type.Plant))
+                        } else if (this.getNeighbour(x, y, 0, 1).element === Element.Water) {
+                            this.setParticle(x, y, 0, 1, new Particle(Element.Plant))
                             // Set other neighbours to empty
-                            this.setParticleIf(x, y, 0, -1, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, -1, 0, Type.Water, new Particle(Type.Plant))
-                            this.setParticleIf(x, y, 1, 0, Type.Water, new Particle(Type.Plant))
+                            this.setParticleIf(x, y, 0, -1, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, -1, 0, Element.Water, new Particle(Element.Plant))
+                            this.setParticleIf(x, y, 1, 0, Element.Water, new Particle(Element.Plant))
+                        }
+
+                    // Fire
+                    } else if (current.element === Element.Fire) {
+                        // Check if fire is burnt out
+                        if (current.isDead()) {
+                            this.setParticle(x, y, 0, 0, new Particle(Element.Empty))
+                        }
+
+                        // Look up
+                        if (this.getNeighbour(x, y, 0, -1).element === Element.Plant) {
+                            this.setParticle(x, y, 0, -1, new Particle(Element.Fire))
+
+                        // Look left
+                        } else if (this.getNeighbour(x, y, -1, 0).element === Element.Plant) {
+                            this.setParticle(x, y, -1, 0, new Particle(Element.Fire))
+
+                        // Look right
+                        } else if (this.getNeighbour(x, y, 1, 0).element === Element.Plant) {
+                            this.setParticle(x, y, 1, 0, new Particle(Element.Fire))
+
+                        // Look down
+                        } else if (this.getNeighbour(x, y, 0, 1).element === Element.Plant) {
+                            this.setParticle(x, y, 0, 1, new Particle(Element.Fire))
                         }
                     }
                 }
@@ -377,7 +418,7 @@ class Game {
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
                 // Only draw all particles if we're drawing from scratch
-                // if (this.particles[x * this.size + y].type !== Type.Empty) {
+                // if (this.particles[x * this.size + y].element !== Element.Empty) {
                 //     ctx.fillStyle = this.particles[x * this.size + y].colour()
                 //     ctx.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
                 // }
@@ -443,20 +484,3 @@ window.addEventListener('mouseup', () => {
     game.clicked = false
 }, false)
 window.addEventListener('mousemove', mousemove, false)
-window.addEventListener('keypress', event => {
-    if (event.key === '1') {
-        game.selection = Type.Empty
-    } else if (event.key === '2') {
-        game.selection = Type.Wall
-    } else if (event.key === 's') {
-        game.selection = Type.Sand
-    } else if (event.key === 'w') {
-        game.selection = Type.Water
-    } else if (event.key === '3') {
-        game.selection = Type.Tap
-    } else if (event.key === 'i') {
-        game.selection = Type.Ice
-    }
-})
-
-

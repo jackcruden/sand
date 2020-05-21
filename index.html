@@ -28,22 +28,44 @@
         <canvas id="canvas" width="600" height="600"></canvas>
 
         <div id="buttons" style="width: 200px; background-color: gray;">
-            <button onclick="game.selection = Type.Empty">Empty</button>
-            <button onclick="game.selection = Type.Wall">🧱 Wall</button>
+            <button class="select" data-element="Air">💨 Air</button>
+            <button class="select" data-element="Block">🧱 Block</button>
 
             <div class="divider"></div>
 
-            <button onclick="game.selection = Type.Sand">⏳ Sand</button>
-            <button onclick="game.selection = Type.Water">💧 Water</button>
-            <button onclick="game.selection = Type.Ice">🧊 Ice</button>
-            <button onclick="game.selection = Type.Plant">🌱 Plant</button>
+            <button class="select" data-element="Water">💧 Water</button>
+            <button class="select" data-element="Sand">⏳ Sand</button>
+<!--            <button class="select" data-element="Ice">🧊 Ice</button>-->
+<!--            <button class="select" data-element="Plant">🌱 Plant</button>-->
+            <button class="select" data-element="Fire">🔥 Fire</button>
 
-            <div class="divider"></div>
+<!--            <div class="divider"></div>-->
 
-            <button onclick="game.selection = Type.Tap">🚰 Tap</button>
+<!--            <button class="select" data-element="Tap">🚰 Tap</button>-->
         </div>
     </div>
 
-    <script src="app.js"></script>
+<!--    <script src="app.js"></script>-->
+
+<!--    <script src="app.js"></script>-->
+    <script type="module">
+        import Game from '/Game.js'
+        let game = new Game(
+            document.getElementById('canvas'),
+            120,
+            120
+        )
+        game.play()
+
+        let buttons = document.querySelectorAll('.select')
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', event => {
+                game.updateSelection(event.target.dataset.element)
+            })
+        }
+        window.addEventListener('mousemove', (event) => { game.updateMousePosition(event) }, false)
+        window.addEventListener('mousedown', () => { game.clicked = true }, false)
+        window.addEventListener('mouseup', () => { game.clicked = false }, false)
+    </script>
 </body>
 </html>
