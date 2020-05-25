@@ -9,7 +9,7 @@ export default class Oil extends Particle {
             State.Liquid,
             { r: 100, g: 100, b: 100},
             false,
-            60,
+            40,
             80,
             50,
         )

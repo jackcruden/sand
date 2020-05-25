@@ -1,4 +1,5 @@
 import Block from './elements/Block.js'
+import Air from './elements/Air.js'
 
 export default class Mutator {
     particles
@@ -25,6 +26,7 @@ export default class Mutator {
 
         if (
             (this.y === this.width - 1 && oy === 1) || // Bottom
+            (this.y === 0 && oy === -1) || // Top
             (this.x === 0 && ox === -1) || // Left
             (this.x === this.width - 1 && ox === 1) // Right
         ) {
@@ -34,54 +36,68 @@ export default class Mutator {
         return this.particles[nx * this.width + ny]
     }
 
-    self(particle) {
+    die(particle = 'self') {
+        this[particle](new Air())
+    }
+
+    particle(ox, oy, particle) {
         if (particle) {
-            return this.particles[this.x * this.width + this.y] = particle
+            return this.set(ox, oy, particle)
         }
-        return this.particles[this.x * this.width + this.y]
+
+        return this.get(ox, oy)
+    }
+
+    aboveLeft(particle) {
+        return this.particle(-1, -1, particle)
     }
 
     above(particle) {
-        if (particle) {
-            return this.particles[this.x * this.width + this.y - 1] = particle
-        }
-        return this.particles[this.x * this.width + this.y - 1]
+        return this.particle(0, -1, particle)
     }
 
-    below(particle) {
-        if (particle) {
-            return this.set(0, 1, particle)
-        }
-        return this.get(0, 1)
-
+    aboveRight(particle) {
+        return this.particle(1, -1, particle)
     }
 
     left(particle) {
-        if (particle) {
-            return this.set(-1, 0, particle)
-        }
-        return this.get(-1, 0)
+        return this.particle(-1, 0, particle)
     }
 
-    belowLeft(particle) {
-        if (particle) {
-            return this.set(-1, 1, particle)
-        }
-        return this.get(-1, 1)
+    self(particle) {
+        return this.particle(0, 0, particle)
     }
 
     right(particle) {
-        if (particle) {
-            return this.set(1, 0, particle)
-        }
-        return this.get(1, 0)
+        return this.particle(1, 0, particle)
+    }
+
+    belowLeft(particle) {
+        return this.particle(-1, 1, particle)
+    }
+
+    below(particle) {
+        return this.particle(0, 1, particle)
     }
 
     belowRight(particle) {
-        if (particle) {
-            return this.set(1, 1, particle)
+        return this.particle(1, 1, particle)
+    }
+
+    aboveRandom(particle) {
+        if (typeof this.random_direction === 'undefined') {
+            this.random_direction = Math.floor(Math.random() * 3) - 1
         }
-        return this.get(1, 1)
+
+        this.particle(this.random_direction, -1, particle)
+    }
+
+    random(particle) {
+        if (typeof this.random_direction === 'undefined') {
+            this.random_direction = Math.floor(Math.random() * 3) - 1
+        }
+
+        this.particle(this.random_direction, 0, particle)
     }
 
     belowRandom(particle) {
@@ -89,18 +105,15 @@ export default class Mutator {
             this.random_direction = Math.floor(Math.random() * 3) - 1
         }
 
-        if (particle) {
-            return this.set(this.random_direction, 1, particle)
-        }
-        return this.get(this.random_direction, 1)
+        this.particle(this.random_direction, 1, particle)
     }
 
     is(direction, type) {
-        return this[direction]().element === type
-    }
+        if (typeof direction === 'string') {
+            direction = this[direction]()
+        }
 
-    isFixed(direction) {
-        return this[direction]().fixed
+        return direction.element === type
     }
 
     swap(subject, direction) {
@@ -129,5 +142,91 @@ export default class Mutator {
         if (this.random_direction === -1) return 'belowLeft'
         if (this.random_direction === 0) return 'below'
         if (this.random_direction === 1) return 'belowRight'
+    }
+
+    randomAboveDirection() {
+        if (typeof this.random_direction === 'undefined') {
+            this.random_direction = Math.floor(Math.random() * 3) - 1
+        }
+
+        if (this.random_direction === -1) return 'aboveLeft'
+        if (this.random_direction === 0) return 'above'
+        if (this.random_direction === 1) return 'aboveRight'
+    }
+
+    isFixed(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.fixed
+    }
+
+    isNotFixed(particle) {
+        return ! this.isFixed(particle)
+    }
+
+    isGas(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.state === 'Gas'
+    }
+
+    isNotGas(particle) {
+        return ! this.isGas(particle)
+    }
+
+    isLiquid(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.state === 'Liquid'
+    }
+
+    isNotLiquid(particle) {
+        return ! this.isLiquid(particle)
+    }
+
+    isSolid(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.state === 'Solid'
+    }
+
+    isNotSolid(particle) {
+        return ! this.isSolid(particle)
+    }
+
+    heavierThan(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return this.self().mass > particle.mass
+    }
+
+    lighterThan(particle) {
+        return ! this.heavierThan(particle)
+    }
+
+    combustable(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.combustibility > 0
+    }
+
+    flammable(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.flammability > 0
     }
 }

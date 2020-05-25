@@ -4,6 +4,7 @@ import Block from '/elements/Block.js'
 import Water from '/elements/Water.js'
 import Sand from '/elements/Sand.js'
 import Fire from '/elements/Fire.js'
+import Oil from '/elements/Oil.js'
 
 import Mutator from '/Mutator.js'
 
@@ -14,6 +15,7 @@ let Elements = {
     'Water': Water,
     'Sand': Sand,
     'Fire': Fire,
+    'Oil': Oil,
 }
 
 export default class Game {
@@ -109,27 +111,27 @@ export default class Game {
 
                 // Gravity
                 if (
-                    !mutator.self().fixed &&
-                    !mutator.below().fixed &&
-                    mutator.self().mass > mutator.below().mass
+                    mutator.isNotFixed('self') &&
+                    mutator.isNotFixed('below') &&
+                    mutator.heavierThan('below')
                 ) {
                     mutator.swap('self', 'below')
                 } else if (
-                    !mutator.self().fixed &&
-                    mutator.self().state === 'Liquid' &&
+                    mutator.isNotFixed('self') &&
+                    mutator.isLiquid('self') &&
                     mutator.is(mutator.randomDirection(), 'Air')
                 ) {
                     mutator.swap('self', mutator.randomDirection())
                 } else if (
-                    !mutator.self().fixed &&
-                    mutator.self().state === 'Solid' &&
+                    mutator.isNotFixed('self') &&
+                    mutator.isSolid('self') &&
                     mutator.is(mutator.randomBelowDirection(), 'Air')
                 ) {
                     mutator.swap('self', mutator.randomBelowDirection())
                 }
 
                 // Liquid
-                if (mutator.self().state === 'Liquid' && mutator.is(mutator.randomBelowDirection(), 'Air')) {
+                if (mutator.isLiquid('self') && mutator.is(mutator.randomBelowDirection(), 'Air')) {
                     mutator.swap('self', mutator.randomDirection())
                 }
 
