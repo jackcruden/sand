@@ -85,6 +85,14 @@ export default class Particle {
         this.durability = durability
         this.burning = false
 
+        // Set colour variation
+        if (this.state === 'Solid') {
+            let variation = Math.floor(Math.random() * 20)
+            this.colour.r += variation
+            this.colour.g += variation
+            this.colour.b += variation
+        }
+
         // Check to see if all properties were set
         Object.getOwnPropertyNames(this).forEach(property => {
             if (typeof this[property] === 'undefined') {
