@@ -12,6 +12,7 @@ export default class Oil extends Particle {
             40,
             80,
             50,
+            40
         )
     }
 }

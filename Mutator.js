@@ -154,7 +154,15 @@ export default class Mutator {
         if (this.random_direction === 1) return 'aboveRight'
     }
 
-    isFixed(particle) {
+    isBurning(particle = 'self') {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.burning
+    }
+
+    isFixed(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -162,11 +170,11 @@ export default class Mutator {
         return particle.fixed
     }
 
-    isNotFixed(particle) {
+    isNotFixed(particle = 'self') {
         return ! this.isFixed(particle)
     }
 
-    isGas(particle) {
+    isGas(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -174,11 +182,11 @@ export default class Mutator {
         return particle.state === 'Gas'
     }
 
-    isNotGas(particle) {
+    isNotGas(particle = 'self') {
         return ! this.isGas(particle)
     }
 
-    isLiquid(particle) {
+    isLiquid(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -186,11 +194,11 @@ export default class Mutator {
         return particle.state === 'Liquid'
     }
 
-    isNotLiquid(particle) {
+    isNotLiquid(particle = 'self') {
         return ! this.isLiquid(particle)
     }
 
-    isSolid(particle) {
+    isSolid(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -198,11 +206,11 @@ export default class Mutator {
         return particle.state === 'Solid'
     }
 
-    isNotSolid(particle) {
+    isNotSolid(particle = 'self') {
         return ! this.isSolid(particle)
     }
 
-    heavierThan(particle) {
+    heavierThan(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -210,11 +218,11 @@ export default class Mutator {
         return this.self().mass > particle.mass
     }
 
-    lighterThan(particle) {
+    lighterThan(particle = 'self') {
         return ! this.heavierThan(particle)
     }
 
-    combustable(particle) {
+    isCombustable(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
@@ -222,11 +230,19 @@ export default class Mutator {
         return particle.combustibility > 0
     }
 
-    flammable(particle) {
+    isFlammable(particle = 'self') {
         if (typeof particle === 'string') {
             particle = this[particle]()
         }
 
         return particle.flammability > 0
+    }
+
+    burn(particle) {
+        if (typeof particle === 'string') {
+            particle = this[particle]()
+        }
+
+        return particle.burning = true
     }
 }

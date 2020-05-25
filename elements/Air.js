@@ -12,6 +12,7 @@ export default class Air extends Particle {
             0,
             0,
             0,
+            100,
         )
     }
 }

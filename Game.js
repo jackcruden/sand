@@ -131,11 +131,44 @@ export default class Game {
                 }
 
                 // Liquid
-                if (mutator.isLiquid('self') && mutator.is(mutator.randomBelowDirection(), 'Air')) {
-                    mutator.swap('self', mutator.randomDirection())
+                if (
+                    mutator.isLiquid('self') &&
+                    mutator.is(mutator.randomBelowDirection(), 'Air')
+                ) {
+                    mutator.swap('self', mutator.randomBelowDirection())
                 }
 
-                this.particles = this.particles[x * this.width + y].step(mutator, this.iteration).particles
+                // Burning
+                if (mutator.isBurning()) {
+                    // Decrease durability
+                    if (mutator.self().durability !== 100) {
+                        mutator.self().durability--
+                    }
+
+                    // Die if out of durability
+                    if (mutator.self().durability < 0) {
+                        if (mutator.is('self', 'Fire')) {
+                            mutator.die()
+                        } else {
+                            mutator.self(new Fire())
+                        }
+
+                        this.particles = mutator.particles
+                        continue
+
+                    // Give off fire
+                    } else if (
+                        ! mutator.is('self', 'Fire') &&
+                        mutator.is('above', 'Air')
+                    ) {
+                        mutator.above(new Fire())
+                    }
+                }
+
+                // If not Air, step
+                if (! mutator.is('self', 'Air')) {
+                    this.particles = this.particles[x * this.width + y].step(mutator, this.iteration).particles
+                }
             }
         }
 

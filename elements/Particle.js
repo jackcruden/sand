@@ -50,6 +50,21 @@ export default class Particle {
     combustibility
 
     /**
+     * How durable the element is.
+     * Out of 100.
+     *
+     * @type {number}
+     */
+    durability
+
+    /**
+     * Is the element burning.
+     *
+     * @type {boolean}
+     */
+    burning
+
+    /**
      * Create the element.
      *
      * @param state
@@ -58,14 +73,17 @@ export default class Particle {
      * @param mass
      * @param flammability
      * @param combustibility
+     * @param durability
      */
-    constructor(state, colour, fixed, mass, flammability, combustibility) {
+    constructor(state, colour, fixed, mass, flammability, combustibility, durability) {
         this.state = state
         this.colour = colour
         this.fixed = fixed
         this.mass = mass
         this.flammability = flammability
         this.combustibility = combustibility
+        this.durability = durability
+        this.burning = false
 
         // Check to see if all properties were set
         Object.getOwnPropertyNames(this).forEach(property => {

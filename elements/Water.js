@@ -12,6 +12,7 @@ export default class Water extends Particle {
             50,
             0,
             0,
+            100,
         )
     }
 }

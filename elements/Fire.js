@@ -12,20 +12,16 @@ export default class Fire extends Particle {
             0,
             0,
             0,
+            Math.floor(Math.random() * 30),
         )
 
-        this.life = Math.floor(Math.random() * 50)
+        super.burning = true
     }
 
     step(mutator) {
-        // Decrease life
-        this.life--
-
-        // Check if dead
-        if (this.life < 0) {
-            mutator.die()
-
-            return mutator
+        // Burn neighbours
+        if (mutator.isFlammable('below')) {
+            mutator.burn('below')
         }
 
         // Float up

@@ -12,6 +12,7 @@ export default class Sand extends Particle {
             100,
             0,
             0,
+            100,
         )
     }
 }
