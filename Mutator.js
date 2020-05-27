@@ -12,6 +12,10 @@ export default class Mutator {
         this.iteration = iteration
     }
 
+    chance(odds) {
+        return Math.random() < odds
+    }
+
     set(ox, oy, particle) {
         let nx = this.x + ox
         let ny = this.y + oy
@@ -119,6 +123,9 @@ export default class Mutator {
     swap(subject, direction) {
         let tempDirection = this[direction]()
         let tempSubject = this[subject]()
+
+        tempDirection.redraw = true
+        tempSubject.redraw = true
 
         this[direction](tempSubject)
         this[subject](tempDirection)

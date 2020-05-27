@@ -1,8 +1,11 @@
 import Air from '/elements/Air.js'
 import Block from '/elements/Block.js'
 
-import Water from '/elements/Water.js'
 import Sand from '/elements/Sand.js'
+import Water from '/elements/Water.js'
+import Ice from '/elements/Ice.js'
+import Plant from '/elements/Plant.js'
+
 import Fire from '/elements/Fire.js'
 import Oil from '/elements/Oil.js'
 
@@ -16,6 +19,8 @@ let Elements = {
     'Sand': Sand,
     'Fire': Fire,
     'Oil': Oil,
+    'Plant': Plant,
+    'Ice': Ice,
 }
 
 export default class Game {
@@ -75,9 +80,15 @@ export default class Game {
         let nx = Math.round(x / this.particle_size)
         let ny = Math.round(y / this.particle_size)
 
-        let cursor_size = Math.floor(this.width / 20)
+        let cursor_size = Math.floor(this.width / 5)
         for (let i = -cursor_size; i < cursor_size / 2; i++) {
             for (let j = -cursor_size; j < cursor_size / 2; j++) {
+                let distance = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2))
+
+                if (distance > cursor_size / 4) {
+                    continue
+                }
+
                 if (this.selection === 'Air') {
                     this.setParticle(nx, ny, i, j, new Elements[this.selection]())
                 } else {
@@ -96,6 +107,8 @@ export default class Game {
         if (this.clicked) {
             this.paint(this.mouse_x, this.mouse_y)
         }
+
+        this.old_particles = this.particles
 
         // Increment the iterator
         this.iteration++
@@ -182,8 +195,12 @@ export default class Game {
     draw() {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                this.context.fillStyle = this.particles[x * this.width + y].getColour()
-                this.context.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
+                if (this.particles[x * this.width + y].redraw) {
+                    this.context.fillStyle = this.particles[x * this.width + y].getColour()
+                    this.context.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
+
+                    this.particles[x * this.width + y].redraw = false
+                }
             }
         }
     }

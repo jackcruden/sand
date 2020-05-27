@@ -20,9 +20,20 @@ export default class Fire extends Particle {
 
     step(mutator) {
         // Burn neighbours
+        if (mutator.isFlammable('above')) {
+            mutator.burn('above')
+        }
         if (mutator.isFlammable('below')) {
             mutator.burn('below')
         }
+        if (mutator.isFlammable('left')) {
+            mutator.burn('left')
+        }
+        if (mutator.isFlammable('right')) {
+            mutator.burn('right')
+        }
+
+
 
         // Float up
         if (mutator.is(mutator.randomAboveDirection(), 'Air')) {

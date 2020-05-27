@@ -4,51 +4,233 @@
     <title>Sand</title>
 
     <style>
-        #buttons {
-            padding: 5px;
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #container {
+            display: flex;
+            background-color: #e3e3e3;
+
+            border: 10px solid #e3e3e3;
+            border-radius: 20px;
+        }
+
+        #case-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #speaker {
+            padding: 5px 10px 5px 5px;
+            line-height: 10px;
+            letter-spacing: 3px;
+        }
+
+        #system {
+            background: black;
+
+            border-radius: 12px 0 0 12px;
+        }
+
+        #system button {
+            display: block;
+            margin: 5px 0 5px 5px;
+        }
+
+        #canvas-container {
+            position: relative;
+            padding: 5px 0 0 5px;
+
+            background-color: black;
+            border-radius: 12px 0 0 0;
+            overflow: hidden;
+        }
+
+        #canvas {
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #canvas-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            background: linear-gradient(129deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 35%, rgba(0, 0, 0, 0) 35%);
+            box-shadow: inset 0px 0px 112px 0px rgba(0,0,0,0.75);
+        }
+
+        #button-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: start;
+            width: 260px;
+            border-radius: 0 12px 12px 0;
+
+            background-color: black;
+        }
+
+        /* Space */
+        #button-container > * + * {
+            margin-top: 5px;
+            margin-left: 5px;
         }
 
         button {
-            display: block;
-            margin-bottom: 5px;
-            padding: 5px;
-            width: 100%;
-            font-size: 1.5em;
-
             -webkit-appearance: none;
+
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            border: none;
+            background-color: #e3e3e3;
+
+            text-transform: uppercase;
+            overflow: hidden;
         }
 
-        .divider {
-            margin: 20px;
+        button:focus {
+            outline: none;
+        }
+
+        button:active span {
+            transform: translateY(3px);
+            border-radius: 999px;
+            background-color: #dedede;
+            box-shadow:  8px 8px 29px #e8e8e8,
+                         -8px -8px 29px #c6c6c6;
+        }
+
+        button span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 5px auto;
+            align-content: end;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #383838;
+            line-height: 1.4em;
+
+            border-radius: 999px;
+            box-shadow:  8px 8px 29px #adadad,
+                         -8px -8px 29px #ffffff;
         }
     </style>
 </head>
-<body style="background-color: black;">
-    <div style="display: flex; width: 800px; height: 600px; margin: 0 auto; background-color: white;">
-        <canvas id="canvas" width="600" height="600"></canvas>
+<body>
+    <div id="container">
+        <div id="case-container">
+            <div id="speaker">
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+            </div>
 
-        <div id="buttons" style="width: 200px; background-color: gray;">
-            <button class="select" data-element="Air">💨 Air</button>
-            <button class="select" data-element="Block">🧱 Block</button>
+            <div id="system">
+                <div></div>
 
-            <div class="divider"></div>
+                <button class="select">
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 16.691V6.84226C7 6.46273 7.40624 6.22157 7.73943 6.40331L17.1599 11.5418C17.5145 11.7352 17.5053 12.2473 17.1441 12.4279L7.72361 17.1382C7.39116 17.3044 7 17.0627 7 16.691Z" fill="#434B5F" fill-opacity="0.7"/>
+                        </svg>
+                    </span>
+                </button>
+                <button class="select">
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 16V7.5C7 7.22386 7.22386 7 7.5 7H16.5C16.7761 7 17 7.22386 17 7.5V16C17 16.2761 16.7761 16.5 16.5 16.5H7.5C7.22386 16.5 7 16.2761 7 16Z" fill="#707687"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
 
-            <button class="select" data-element="Water">💧 Water</button>
-            <button class="select" data-element="Sand">⏳ Sand</button>
-<!--            <button class="select" data-element="Ice">🧊 Ice</button>-->
-<!--            <button class="select" data-element="Plant">🌱 Plant</button>-->
-            <button class="select" data-element="Fire">🔥 Fire</button>
-            <button class="select" data-element="Oil">🛢 Oil</button>
+        <div id="canvas-container">
+            <canvas id="canvas" width="600" height="600"></canvas>
+            <div id="canvas-overlay"></div>
+        </div>
 
-<!--            <div class="divider"></div>-->
+        <div id="button-container">
+            <div></div>
 
-<!--            <button class="select" data-element="Tap">🚰 Tap</button>-->
+            <button class="select">
+                <span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 16.691V6.84226C7 6.46273 7.40624 6.22157 7.73943 6.40331L17.1599 11.5418C17.5145 11.7352 17.5053 12.2473 17.1441 12.4279L7.72361 17.1382C7.39116 17.3044 7 17.0627 7 16.691Z" fill="#434B5F" fill-opacity="0.7"/>
+                    </svg>
+                </span>
+            </button>
+            <button class="select">
+                <span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 16V7.5C7 7.22386 7.22386 7 7.5 7H16.5C16.7761 7 17 7.22386 17 7.5V16C17 16.2761 16.7761 16.5 16.5 16.5H7.5C7.22386 16.5 7 16.2761 7 16Z" fill="#707687"/>
+                    </svg>
+                </span>
+            </button>
+
+            <button class="select" data-element="Air">
+                <span>💨<br>Air</span>
+            </button>
+            <button class="select" data-element="Block">
+                <span>🧱<br>Block</span>
+            </button>
+
+            <button class="select" data-element="Sand">
+                <span>⏳<br>Sand</span>
+            </button>
+            <button class="select" data-element="Water">
+                <span>💧<br>Water</span>
+            </button>
+            <button class="select" data-element="Ice">
+                <span>🧊<br>Ice</span>
+            </button>
+            <button class="select" data-element="Plant">
+                <span>🌱<br>Plant</span>
+            </button>
+
+            <button class="select" data-element="Fire">
+                <span>🔥<br>Fire</span>
+            </button>
+            <button class="select" data-element="Oil">
+                <span>🛢<br>Oil</span>
+            </button>
         </div>
     </div>
 
-<!--    <script src="app.js"></script>-->
-
-<!--    <script src="app.js"></script>-->
     <script type="module">
         import Game from '/Game.js'
         let game = new Game(
@@ -58,12 +240,15 @@
         )
         game.play()
 
-        let buttons = document.querySelectorAll('.select')
+        let buttons = document.querySelectorAll('button.select')
         for (let i = 0; i < buttons.length; i++) {
-            buttons[i].addEventListener('click', event => {
-                game.updateSelection(event.target.dataset.element)
-            })
+            if (buttons[i].closest('button').dataset.element) {
+                buttons[i].addEventListener('click', event => {
+                    game.updateSelection(event.target.closest('button').dataset.element)
+                })
+            }
         }
+
         window.addEventListener('mousemove', (event) => { game.updateMousePosition(event) }, false)
         window.addEventListener('mousedown', () => { game.clicked = true }, false)
         window.addEventListener('mouseup', () => { game.clicked = false }, false)

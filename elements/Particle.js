@@ -84,10 +84,18 @@ export default class Particle {
         this.combustibility = combustibility
         this.durability = durability
         this.burning = false
+        this.redraw = true
 
         // Set colour variation
-        if (this.state === 'Solid') {
-            let variation = Math.floor(Math.random() * 20)
+        if (this.state === 'Solid' && this.element !== 'Block') {
+            let variation = Math.round(Math.sin(new Date().getMilliseconds()) * 20) + 20
+
+            // let distance = '.'
+            // for (let i = 0; i < variation; i++) {
+            //     distance += '.'
+            // }
+            // console.log(distance + variation)
+
             this.colour.r += variation
             this.colour.g += variation
             this.colour.b += variation
