@@ -1,27 +1,5 @@
-import Air from '/elements/Air.js'
-import Block from '/elements/Block.js'
-
-import Sand from '/elements/Sand.js'
-import Water from '/elements/Water.js'
-import Ice from '/elements/Ice.js'
-import Plant from '/elements/Plant.js'
-
-import Fire from '/elements/Fire.js'
-import Oil from '/elements/Oil.js'
-
 import Mutator from '/Mutator.js'
-
-let Elements = {
-    'Air': Air,
-    'Block': Block,
-
-    'Water': Water,
-    'Sand': Sand,
-    'Fire': Fire,
-    'Oil': Oil,
-    'Plant': Plant,
-    'Ice': Ice,
-}
+import * as Elements from '/global.js'
 
 export default class Game {
     // Setup
@@ -51,7 +29,7 @@ export default class Game {
         // Initialise particles
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                this.particles[x * this.height + y] = new Air()
+                this.particles[x * this.height + y] = new Elements.Air()
             }
         }
     }
@@ -132,13 +110,13 @@ export default class Game {
                 } else if (
                     mutator.isNotFixed('self') &&
                     mutator.isLiquid('self') &&
-                    mutator.is(mutator.randomDirection(), 'Air')
+                    mutator.is(mutator.randomDirection(), 'Gas')
                 ) {
                     mutator.swap('self', mutator.randomDirection())
                 } else if (
                     mutator.isNotFixed('self') &&
                     mutator.isSolid('self') &&
-                    mutator.is(mutator.randomBelowDirection(), 'Air')
+                    mutator.is(mutator.randomBelowDirection(), 'Gas')
                 ) {
                     mutator.swap('self', mutator.randomBelowDirection())
                 }
@@ -146,7 +124,7 @@ export default class Game {
                 // Liquid
                 if (
                     mutator.isLiquid('self') &&
-                    mutator.is(mutator.randomBelowDirection(), 'Air')
+                    mutator.heavierThan(mutator.randomBelowDirection())
                 ) {
                     mutator.swap('self', mutator.randomBelowDirection())
                 }
@@ -163,7 +141,7 @@ export default class Game {
                         if (mutator.is('self', 'Fire')) {
                             mutator.die()
                         } else {
-                            mutator.self(new Fire())
+                            mutator.self(new Elements.Fire())
                         }
 
                         this.particles = mutator.particles
@@ -174,7 +152,7 @@ export default class Game {
                         ! mutator.is('self', 'Fire') &&
                         mutator.is('above', 'Air')
                     ) {
-                        mutator.above(new Fire())
+                        mutator.above(new Elements.Fire())
                     }
                 }
 

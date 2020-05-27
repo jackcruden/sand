@@ -112,12 +112,35 @@ export default class Mutator {
         this.particle(this.random_direction, 1, particle)
     }
 
-    is(direction, type) {
-        if (typeof direction === 'string') {
-            direction = this[direction]()
+    is(directions, types) {
+        // Make direction an array
+        if (! Array.isArray(directions)) {
+            directions = [directions]
         }
 
-        return direction.element === type
+        // Make type an array
+         if (! Array.isArray(types)) {
+            types = [types]
+        }
+
+        // Check each direction
+        for (let direction of directions) {
+            if (typeof direction === 'string') {
+                direction = this[direction]()
+            }
+
+            // Try match element then state
+            for (let type of types) {
+                if (direction.element === type) return true
+                if (direction.state === type) return true
+            }
+        }
+
+        return false
+    }
+
+    isNot(direction, type) {
+        return ! this.is(direction, type)
     }
 
     swap(subject, direction) {

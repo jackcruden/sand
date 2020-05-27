@@ -87,14 +87,8 @@ export default class Particle {
         this.redraw = true
 
         // Set colour variation
-        if (this.state === 'Solid' && this.element !== 'Block') {
+        if (this.state !== 'Liquid' && this.element !== 'Block') {
             let variation = Math.round(Math.sin(new Date().getMilliseconds()) * 20) + 20
-
-            // let distance = '.'
-            // for (let i = 0; i < variation; i++) {
-            //     distance += '.'
-            // }
-            // console.log(distance + variation)
 
             this.colour.r += variation
             this.colour.g += variation
@@ -153,5 +147,9 @@ export default class Particle {
         this.iteration = iteration
 
         return mutator
+    }
+
+    clone() {
+
     }
 }

@@ -7,7 +7,7 @@ export default class Oil extends Particle {
     constructor() {
         super(
             State.Liquid,
-            { r: 100, g: 100, b: 100},
+            { r: 80, g: 60, b: 40 },
             false,
             40,
             80,

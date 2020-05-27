@@ -4,7 +4,11 @@ import {State} from '/global.js'
 import Particle from '/elements/Particle.js'
 
 export default class Fire extends Particle {
-    constructor() {
+    constructor(durability) {
+        if (! durability) {
+            durability = Math.floor(Math.random() * 30)
+        }
+
         super(
             State.Gas,
             { r: 250, g: 100, b: 100},
@@ -12,7 +16,7 @@ export default class Fire extends Particle {
             0,
             0,
             0,
-            Math.floor(Math.random() * 30),
+            durability
         )
 
         super.burning = true

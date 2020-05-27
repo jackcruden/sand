@@ -7,7 +7,7 @@ export default class Water extends Particle {
     constructor() {
         super(
             State.Liquid,
-            { r: 50, g: 50, b: 100},
+            { r: 90, g: 170, b: 250},
             false,
             50,
             0,
