@@ -19,6 +19,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
+            user-select: none;
         }
 
         #container {
@@ -73,8 +75,48 @@
             top: 0;
             left: 0;
 
-            background: linear-gradient(129deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 35%, rgba(0, 0, 0, 0) 35%);
-            box-shadow: inset 0px 0px 112px 0px rgba(0,0,0,0.75);
+            background: linear-gradient(129deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 35%, rgba(0, 0, 0, 0) 35%);
+            box-shadow: inset 0 0 112px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        #canvas-overlay:hover {
+            cursor: pointer;
+        }
+
+        #canvas-overlay::before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #canvas-overlay::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            animation: flicker 0.1s infinite;
         }
 
         #button-container {
@@ -104,6 +146,10 @@
 
             text-transform: uppercase;
             overflow: hidden;
+        }
+
+        button:hover {
+            cursor: pointer;
         }
 
         button:focus {
