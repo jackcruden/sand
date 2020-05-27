@@ -18,8 +18,8 @@ export default class Ice extends Particle {
     }
 
     step(mutator) {
+        // If near water, change it to ice
         if (mutator.chance(2/100)) {
-            // If near water, change it to ice
             if (mutator.is('above', 'Water')) {
                 mutator.above(new Ice())
             }
@@ -32,8 +32,10 @@ export default class Ice extends Particle {
             if (mutator.is('right', 'Water')) {
                 mutator.right(new Ice())
             }
+        }
 
-            // If near fire, change self to water
+        // If near fire, change self to water
+        if (mutator.chance(5/100)) {
             if (
                 mutator.is('above', 'Fire') ||
                 mutator.is('below', 'Fire') ||
