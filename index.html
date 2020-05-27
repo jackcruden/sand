@@ -75,7 +75,7 @@
             top: 0;
             left: 0;
 
-            background: linear-gradient(129deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 35%, rgba(0, 0, 0, 0) 35%);
+            background: linear-gradient(129deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 35%, rgba(0, 0, 0, 0) 35%);
             box-shadow: inset 0 0 112px 0 rgba(0, 0, 0, 0.5);
         }
 
@@ -208,14 +208,14 @@
             <div id="system">
                 <div></div>
 
-                <button class="select">
+                <button class="select" onclick="window.game.play()">
                     <span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 16.691V6.84226C7 6.46273 7.40624 6.22157 7.73943 6.40331L17.1599 11.5418C17.5145 11.7352 17.5053 12.2473 17.1441 12.4279L7.72361 17.1382C7.39116 17.3044 7 17.0627 7 16.691Z" fill="#434B5F" fill-opacity="0.7"/>
                         </svg>
                     </span>
                 </button>
-                <button class="select">
+                <button class="select" onclick="window.game.pause()">
                     <span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 16V7.5C7 7.22386 7.22386 7 7.5 7H16.5C16.7761 7 17 7.22386 17 7.5V16C17 16.2761 16.7761 16.5 16.5 16.5H7.5C7.22386 16.5 7 16.2761 7 16Z" fill="#707687"/>
@@ -248,30 +248,30 @@
                 </span>
             </button>
 
-            <button class="select" data-element="Air">
+            <button class="select" onclick="window.game.updateSelection('Air')">
                 <span>💨<br>Air</span>
             </button>
-            <button class="select" data-element="Block">
+            <button class="select" onclick="window.game.updateSelection('Block')">
                 <span>🧱<br>Block</span>
             </button>
 
-            <button class="select" data-element="Sand">
+            <button class="select" onclick="window.game.updateSelection('Sand')">
                 <span>⏳<br>Sand</span>
             </button>
-            <button class="select" data-element="Water">
+            <button class="select" onclick="window.game.updateSelection('Water')">
                 <span>💧<br>Water</span>
             </button>
-            <button class="select" data-element="Ice">
+            <button class="select" onclick="window.game.updateSelection('Ice')">
                 <span>🧊<br>Ice</span>
             </button>
-            <button class="select" data-element="Plant">
+            <button class="select" onclick="window.game.updateSelection('Plant')">
                 <span>🌱<br>Plant</span>
             </button>
 
-            <button class="select" data-element="Fire">
+            <button class="select" onclick="window.game.updateSelection('Fire')">
                 <span>🔥<br>Fire</span>
             </button>
-            <button class="select" data-element="Oil">
+            <button class="select" onclick="window.game.updateSelection('Oil')">
                 <span>🛢<br>Oil</span>
             </button>
         </div>
@@ -279,25 +279,16 @@
 
     <script type="module">
         import Game from '/Game.js'
-        let game = new Game(
+        window.game = new Game(
             document.getElementById('canvas'),
             120,
             120
         )
-        game.play()
+        window.game.play()
 
-        let buttons = document.querySelectorAll('button.select')
-        for (let i = 0; i < buttons.length; i++) {
-            if (buttons[i].closest('button').dataset.element) {
-                buttons[i].addEventListener('click', event => {
-                    game.updateSelection(event.target.closest('button').dataset.element)
-                })
-            }
-        }
-
-        window.addEventListener('mousemove', (event) => { game.updateMousePosition(event) }, false)
-        window.addEventListener('mousedown', () => { game.clicked = true }, false)
-        window.addEventListener('mouseup', () => { game.clicked = false }, false)
+        window.addEventListener('mousemove', (event) => { window.game.updateMousePosition(event) }, false)
+        window.addEventListener('mousedown', () => { window.game.clicked = true }, false)
+        window.addEventListener('mouseup', () => { window.game.clicked = false }, false)
     </script>
 </body>
 </html>
