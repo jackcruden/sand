@@ -11,6 +11,7 @@ export default class Game {
     particle_size
     playing = false
     iteration = 0
+    cursor_size = 10
 
     // Mouse
     selection = 'Sand'
@@ -43,6 +44,15 @@ export default class Game {
         this.playing = false
     }
 
+    clear() {
+        // Initialise particles
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                this.particles[x * this.height + y] = new Elements.Air()
+            }
+        }
+    }
+
     updateMousePosition(event) {
         let bounding = this.canvas.getBoundingClientRect()
 
@@ -54,16 +64,30 @@ export default class Game {
         this.selection = selection
     }
 
+    updateCursor() {
+        let cursors = [
+            this.width / 40,
+            this.width / 20,
+            this.width / 10,
+            this.width / 5
+        ]
+
+        if (cursors.indexOf(this.cursor_size) === cursors.length - 1) {
+            this.cursor_size = cursors[0]
+        } else {
+            this.cursor_size = cursors[cursors.indexOf(this.cursor_size) + 1]
+        }
+    }
+
     paint(x, y) {
         let nx = Math.round(x / this.particle_size)
         let ny = Math.round(y / this.particle_size)
 
-        let cursor_size = Math.floor(this.width / 5)
-        for (let i = -cursor_size; i < cursor_size / 2; i++) {
-            for (let j = -cursor_size; j < cursor_size / 2; j++) {
+        for (let i = -this.cursor_size; i < this.cursor_size / 2; i++) {
+            for (let j = -this.cursor_size; j < this.cursor_size / 2; j++) {
                 let distance = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2))
 
-                if (distance > cursor_size / 4) {
+                if (distance > this.cursor_size / 4) {
                     continue
                 }
 

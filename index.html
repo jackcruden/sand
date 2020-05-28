@@ -209,6 +209,12 @@
             <div id="system">
                 <div></div>
 
+                <button class="select" onclick="window.game.updateCursor()">
+                    <span>✏️</span>
+                </button>
+                <button class="select" onclick="window.game.clear()">
+                    <span>⃝</span>
+                </button>
                 <button class="select" onclick="window.game.play()">
                     <span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -240,34 +246,38 @@
             <button class="select" onclick="window.game.updateSelection('Block')">
                 <span>🧱<br>Block</span>
             </button>
-
             <button class="select" onclick="window.game.updateSelection('Sand')">
                 <span>⏳<br>Sand</span>
             </button>
+
             <button class="select" onclick="window.game.updateSelection('Water')">
                 <span>💧<br>Water</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Ice')">
                 <span>🧊<br>Ice</span>
             </button>
+            <button class="select" onclick="window.game.updateSelection('Acid')">
+                <span>🧪<br>Acid</span>
+            </button>
+
             <button class="select" onclick="window.game.updateSelection('Plant')">
                 <span>🌱<br>Plant</span>
+            </button>
+            <button class="select" onclick="window.game.updateSelection('Wood')">
+                <span>🌲<br>Wood</span>
+            </button>
+            <button class="select" onclick="window.game.updateSelection('Tap')">
+                <span>🚰<br>Tap</span>
             </button>
 
             <button class="select" onclick="window.game.updateSelection('Fire')">
                 <span>🔥<br>Fire</span>
             </button>
-            <button class="select" onclick="window.game.updateSelection('Oil')">
-                <span>🛢<br>Oil</span>
-            </button>
-            <button class="select" onclick="window.game.updateSelection('Acid')">
-                <span>🧪<br>Acid</span>
-            </button>
             <button class="select" onclick="window.game.updateSelection('Lava')">
                 <span>🌋<br>Lava</span>
             </button>
-            <button class="select" onclick="window.game.updateSelection('Tap')">
-                <span>🚰<br>Tap</span>
+            <button class="select" onclick="window.game.updateSelection('Oil')">
+                <span>🛢<br>Oil</span>
             </button>
         </div>
     </div>
