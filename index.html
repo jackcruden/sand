@@ -15,6 +15,7 @@
             margin: 0;
             padding: 0;
 
+            overflow: hidden;
             background-color: black;
             display: flex;
             align-items: center;
@@ -31,7 +32,7 @@
             border-radius: 20px;
         }
 
-        #case-container {
+        #left-container {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -40,7 +41,7 @@
         #speaker {
             padding: 5px 10px 5px 5px;
             line-height: 10px;
-            letter-spacing: 3px;
+            font-family: Courier, serif;
         }
 
         #system {
@@ -54,7 +55,7 @@
             margin: 5px 0 5px 5px;
         }
 
-        #canvas-container {
+        #center-container {
             position: relative;
             padding: 5px 0 0 5px;
 
@@ -63,12 +64,12 @@
             overflow: hidden;
         }
 
-        #canvas {
+        #large-screen, #small-screen {
             border-radius: 5px;
             overflow: hidden;
         }
 
-        #canvas-overlay {
+        #large-screen-overlay, #small-screen-overlay {
             width: 100%;
             height: 100%;
             position: absolute;
@@ -79,12 +80,12 @@
             box-shadow: inset 0 0 112px 0 rgba(0, 0, 0, 0.3);
         }
 
-        #canvas-overlay:hover {
+        #large-screen-overlay:hover {
             cursor: pointer;
         }
 
         /* Lines */
-        #canvas-overlay::before {
+        #large-screen-overlay::before, #small-screen-overlay::before {
             content: ' ';
             display: block;
             position: absolute;
@@ -105,7 +106,7 @@
             }
         }
 
-        #canvas-overlay::after {
+        #large-screen-overlay::after, #small-screen-overlay::after {
             content: " ";
             display: block;
             position: absolute;
@@ -120,7 +121,7 @@
             animation: flicker 0.1s infinite;
         }
 
-        #button-container {
+        #right-container {
             display: flex;
             flex-wrap: wrap;
             align-content: start;
@@ -130,13 +131,33 @@
             background-color: black;
         }
 
+        #small-screen-container {
+            position: relative;
+            width: 100%;
+            padding-right: 5px;
+        }
+
+        #small-screen {
+            padding: 10px;
+            background-color: #656565;
+
+            font-size: 14px;
+            font-family: Courier, serif;
+            color: lightgreen;
+            text-shadow: 0px 0px 2px lightgreen;
+        }
+
+        #small-screen-overlay {
+            box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.3);
+        }
+
         /* Space */
-        #button-container > * + * {
+        #right-container > * + * {
             margin-top: 5px;
             margin-left: 5px;
         }
 
-        button {
+        .select {
             -webkit-appearance: none;
 
             width: 80px;
@@ -149,15 +170,15 @@
             overflow: hidden;
         }
 
-        button:hover {
+        .select:hover {
             cursor: pointer;
         }
 
-        button:focus {
+        .select:focus {
             outline: none;
         }
 
-        button:active span {
+        .select:active span {
             transform: translateY(3px);
             border-radius: 999px;
             background-color: #dedede;
@@ -165,7 +186,7 @@
                          -8px -8px 29px #c6c6c6;
         }
 
-        button span {
+        .select span {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -187,23 +208,15 @@
 </head>
 <body>
     <div id="container">
-        <div id="case-container">
+        <div id="left-container">
             <div id="speaker">
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
-                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &nbsp;&nbsp;&bullet;&bullet;&bullet;&nbsp;&nbsp;<br>
+                &nbsp;&bullet;&bullet;&bullet;&bullet;&bullet;&nbsp;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &bullet;&bullet;&bullet;&bullet;&bullet;&bullet;&bullet;<br>
+                &nbsp;&bullet;&bullet;&bullet;&bullet;&bullet;&nbsp;<br>
+                &nbsp;&nbsp;&bullet;&bullet;&bullet;&nbsp;&nbsp;<br>
             </div>
 
             <div id="system">
@@ -232,13 +245,21 @@
             </div>
         </div>
 
-        <div id="canvas-container">
-            <canvas id="canvas" width="600" height="600"></canvas>
-            <div id="canvas-overlay"></div>
+        <div id="center-container">
+            <canvas id="large-screen" width="600" height="600"></canvas>
+            <div id="large-screen-overlay"></div>
         </div>
 
-        <div id="button-container">
+        <div id="right-container">
             <div></div>
+
+            <div id="small-screen-container">
+                <div id="small-screen">
+                    <br><br><br>
+                </div>
+                <div id="small-screen-overlay"></div>
+            </div>
+
 
             <button class="select" onclick="window.game.updateSelection('Air')">
                 <span>💨<br>Air</span>
@@ -285,7 +306,7 @@
     <script type="module">
         import Game from '/Game.js'
         window.game = new Game(
-            document.getElementById('canvas'),
+            document.getElementById('large-screen'),
             120,
             120
         )
@@ -294,6 +315,32 @@
         window.addEventListener('mousemove', (event) => { window.game.updateMousePosition(event) }, false)
         window.addEventListener('mousedown', () => { window.game.clicked = true }, false)
         window.addEventListener('mouseup', () => { window.game.clicked = false }, false)
+
+        window.setInterval(() => {
+            let stats = game.calculateStats()
+
+            setStats({
+                'State': stats.state,
+                'FPS': stats.fps,
+                'Selection': stats.selection,
+            })
+        }, 1000)
+
+        function setStats(values) {
+            // Clear current values
+            document.querySelector('#small-screen').innerHTML = ''
+
+            // Set new values
+            for (const [key, value] of Object.entries(values)) {
+                document.querySelector('#small-screen').innerHTML += key
+
+                for (let i = 0; i < 27 - (key.length + value.toString().length); i++) {
+                    document.querySelector('#small-screen').innerHTML += '.'
+                }
+
+                document.querySelector('#small-screen').innerHTML += value + '<br>'
+            }
+        }
     </script>
 </body>
 </html>

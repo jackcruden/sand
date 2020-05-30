@@ -11,6 +11,7 @@ export default class Game {
     particle_size
     playing = false
     iteration = 0
+    iteration_last = 0
     cursor_size = 10
 
     // Mouse
@@ -99,6 +100,18 @@ export default class Game {
                     }
                 }
             }
+        }
+    }
+
+    calculateStats() {
+        // FPS
+        let fps = this.iteration - this.iteration_last
+        this.iteration_last = this.iteration
+
+        return {
+            state: this.playing ? 'Playing' : 'Paused',
+            fps,
+            selection: this.selection
         }
     }
 
@@ -210,6 +223,14 @@ export default class Game {
     setParticle(x, y, ox, oy, particle) {
         let nx = x + ox
         let ny = y + oy
+
+        // Set bounds of top and bottom
+        if (
+            (y < 0 - oy) || // Top
+            (y > this.height - 1 - oy) // Bottom
+        ) {
+            return
+        }
 
         this.particles[nx * this.width + ny] = particle
     }

@@ -1,6 +1,6 @@
 'use strict'
 
-const canvas = document.getElementById('canvas')
+const canvas = document.getElementById('large-screen')
 const ctx = canvas.getContext('2d', {
     alpha: false
 })
