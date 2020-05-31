@@ -13,6 +13,8 @@ export default class Game {
     iteration = 0
     iteration_last = 0
     cursor_size = 10
+    particles_moving = 0
+    particles_total = 0
 
     // Mouse
     selection = 'Sand'
@@ -111,7 +113,9 @@ export default class Game {
         return {
             state: this.playing ? 'Playing' : 'Paused',
             fps,
-            selection: this.selection
+            selection: this.selection,
+            particles_moving: this.particles_moving,
+            particles_total: this.particles_total,
         }
     }
 
@@ -208,16 +212,28 @@ export default class Game {
     }
 
     draw() {
+        let particles_total = 0
+        let particles_moving = 0
+
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
+                if (this.particles[x * this.width + y].element !== 'Air') {
+                    particles_total++
+                }
+
                 if (this.particles[x * this.width + y].redraw) {
                     this.context.fillStyle = this.particles[x * this.width + y].getColour()
                     this.context.fillRect(x * this.particle_size, y * this.particle_size, this.particle_size, this.particle_size)
 
                     this.particles[x * this.width + y].redraw = false
+
+                    particles_moving++
                 }
             }
         }
+
+        this.particles_moving = particles_moving
+        this.particles_total = particles_total
     }
 
     setParticle(x, y, ox, oy, particle) {

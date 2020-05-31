@@ -188,6 +188,7 @@
 
         .select span {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
 
@@ -196,15 +197,22 @@
             width: 50px;
             height: 50px;
             text-align: center;
-            font-size: 12px;
-            color: #383838;
-            line-height: 1.4em;
+            font-size: 10px;
+            color: #6a6a6a;
+            line-height: 0.6em;
 
             border-radius: 999px;
             box-shadow:  8px 8px 29px #adadad,
                          -8px -8px 29px #ffffff;
         }
+
+        .select span i {
+            display: block;
+            font-size: 15px;
+        }
     </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
 </head>
 <body>
     <div id="container">
@@ -223,24 +231,16 @@
                 <div></div>
 
                 <button class="select" onclick="window.game.updateCursor()">
-                    <span>✏️</span>
+                    <span><i class="fas fa-dot-circle"></i><br>Size</span>
                 </button>
                 <button class="select" onclick="window.game.clear()">
-                    <span>⃝</span>
+                    <span><i class="fas fa-snowplow"></i><br>Clear</span>
                 </button>
                 <button class="select" onclick="window.game.play()">
-                    <span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 16.691V6.84226C7 6.46273 7.40624 6.22157 7.73943 6.40331L17.1599 11.5418C17.5145 11.7352 17.5053 12.2473 17.1441 12.4279L7.72361 17.1382C7.39116 17.3044 7 17.0627 7 16.691Z" fill="#434B5F" fill-opacity="0.7"/>
-                        </svg>
-                    </span>
+                    <span><i class="fas fa-play"></i><br>Play</span>
                 </button>
                 <button class="select" onclick="window.game.pause()">
-                    <span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 16V7.5C7 7.22386 7.22386 7 7.5 7H16.5C16.7761 7 17 7.22386 17 7.5V16C17 16.2761 16.7761 16.5 16.5 16.5H7.5C7.22386 16.5 7 16.2761 7 16Z" fill="#707687"/>
-                        </svg>
-                    </span>
+                    <span><i class="fas fa-pause"></i><br>Pause</span>
                 </button>
             </div>
         </div>
@@ -255,50 +255,50 @@
 
             <div id="small-screen-container">
                 <div id="small-screen">
-                    <br><br><br>
+                    <br><br><br><br><br>
                 </div>
                 <div id="small-screen-overlay"></div>
             </div>
 
 
             <button class="select" onclick="window.game.updateSelection('Air')">
-                <span>💨<br>Air</span>
+                <span><i class="fas fa-wind"></i><br>Air</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Block')">
-                <span>🧱<br>Block</span>
+                <span><i class="fas fa-square"></i><br>Block</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Sand')">
-                <span>⏳<br>Sand</span>
+                <span><i class="fas fa-hourglass-half"></i><br>Sand</span>
             </button>
 
             <button class="select" onclick="window.game.updateSelection('Water')">
-                <span>💧<br>Water</span>
+                <span><i class="fas fa-tint"></i><br>Water</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Ice')">
-                <span>🧊<br>Ice</span>
+                <span><i class="fas fa-icicles"></i><br>Ice</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Acid')">
-                <span>🧪<br>Acid</span>
+                <span><i class="fas fa-vial"></i><br>Acid</span>
             </button>
 
             <button class="select" onclick="window.game.updateSelection('Plant')">
-                <span>🌱<br>Plant</span>
+                <span><i class="fas fa-seedling"></i><br>Plant</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Wood')">
-                <span>🌲<br>Wood</span>
+                <span><i class="fas fa-tree"></i><br>Wood</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Tap')">
-                <span>🚰<br>Tap</span>
+                <span><i class="fas fa-shower"></i><br>Tap</span>
             </button>
 
             <button class="select" onclick="window.game.updateSelection('Fire')">
-                <span>🔥<br>Fire</span>
+                <span><i class="fas fa-fire"></i><br>Fire</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Lava')">
-                <span>🌋<br>Lava</span>
+                <span><i class="fas fa-mountain"></i><br>Lava</span>
             </button>
             <button class="select" onclick="window.game.updateSelection('Oil')">
-                <span>🛢<br>Oil</span>
+                <span><i class="fas fa-oil-can"></i><br>Oil</span>
             </button>
         </div>
     </div>
@@ -323,6 +323,8 @@
                 'State': stats.state,
                 'FPS': stats.fps,
                 'Selection': stats.selection,
+                'Moving Particles': stats.particles_moving,
+                'Total Particles': stats.particles_total
             })
         }, 1000)
 
