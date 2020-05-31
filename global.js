@@ -19,3 +19,6 @@ export { default as Tap } from '/elements/Tap.js'
 export { default as Fire } from '/elements/Fire.js'
 export { default as Lava } from '/elements/Lava.js'
 export { default as Oil } from '/elements/Oil.js'
+
+export { default as Nitro } from '/elements/Nitro.js'
+export { default as Vapor } from '/elements/Vapor.js'

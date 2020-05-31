@@ -15,6 +15,8 @@ export default class Lava extends Particle {
             0,
             100,
         )
+
+        super.burning = true
     }
 
     step(mutator) {

@@ -37,10 +37,10 @@ export default class Ice extends Particle {
         // If near fire, change self to water
         if (mutator.chance(5/100)) {
             if (
-                mutator.is('above', 'Fire') ||
-                mutator.is('below', 'Fire') ||
-                mutator.is('left', 'Fire') ||
-                mutator.is('right', 'Fire')
+                mutator.isBurning('above') ||
+                mutator.isBurning('below') ||
+                mutator.isBurning('left') ||
+                mutator.isBurning('right')
             ) {
                 mutator.self(new Water())
             }

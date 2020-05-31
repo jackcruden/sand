@@ -7,7 +7,7 @@ export default class Block extends Particle {
     constructor() {
         super(
             State.Solid,
-            { r: 50, g: 50, b: 50 },
+            { r: 150, g: 150, b: 150 },
             true,
             100,
             0,

@@ -142,14 +142,11 @@ export default class Particle {
     /**
      * Step the given grid.
      * @param mutator
+     * @param iteration
      */
     step(mutator, iteration) {
         this.iteration = iteration
 
         return mutator
-    }
-
-    clone() {
-
     }
 }

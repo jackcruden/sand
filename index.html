@@ -179,6 +179,7 @@
         }
 
         .select:active span {
+            transition: all 0.2s;
             transform: translateY(3px);
             border-radius: 999px;
             background-color: #dedede;
@@ -192,6 +193,7 @@
             align-items: center;
             justify-content: center;
 
+            transition: all 0.2s;
             margin: 5px auto;
             align-content: end;
             width: 50px;
@@ -299,6 +301,12 @@
             </button>
             <button class="select" onclick="window.game.updateSelection('Oil')">
                 <span><i class="fas fa-oil-can"></i><br>Oil</span>
+            </button>
+            <button class="select" onclick="window.game.updateSelection('Nitro')">
+                <span><i class="fas fa-bomb"></i><br>Nitro</span>
+            </button>
+            <button class="select" onclick="window.game.updateSelection('Vapor')">
+                <span><i class="fas fa-cloud"></i><br>Vapor</span>
             </button>
         </div>
     </div>

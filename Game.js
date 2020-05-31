@@ -170,6 +170,22 @@ export default class Game {
                     mutator.swap('self', mutator.randomBelowDirection())
                 }
 
+                // Gas
+                if (
+                    mutator.isGas('self') &&
+                    mutator.isNot('self', 'Air') &&
+                    mutator.chance(2/100)
+                ) {
+                    let direction = Math.floor(Math.random() * 3 - 1)
+                    if (direction === -1 && mutator.is(mutator.randomAboveDirection(), 'Air')) {
+                        mutator.swap('self', mutator.randomAboveDirection())
+                    } else if (direction === 0 && mutator.is(mutator.randomDirection(), 'Air')) {
+                        mutator.swap('self', mutator.randomDirection())
+                    } else if (direction === 1 && mutator.is(mutator.randomBelowDirection(), 'Air')) {
+                        mutator.swap('self', mutator.randomBelowDirection())
+                    }
+                }
+
                 // Burning
                 if (mutator.isBurning()) {
                     // Decrease durability
@@ -190,7 +206,8 @@ export default class Game {
 
                     // Give off fire
                     } else if (
-                        ! mutator.is('self', 'Fire') &&
+                        mutator.isNot('self', 'Fire') &&
+                        mutator.isNot('self', 'Lava') &&
                         mutator.is('above', 'Air')
                     ) {
                         mutator.above(new Elements.Fire())

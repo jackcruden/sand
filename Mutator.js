@@ -119,7 +119,7 @@ export default class Mutator {
         }
 
         // Make type an array
-         if (! Array.isArray(types)) {
+        if (! Array.isArray(types)) {
             types = [types]
         }
 
