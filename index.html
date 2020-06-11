@@ -138,10 +138,10 @@
         }
 
         #small-screen {
-            padding: 10px;
+            padding: 15px 10px;
             background-color: #656565;
 
-            font-size: 14px;
+            font-size: 16px;
             font-family: Courier, serif;
             color: lightgreen;
             text-shadow: 0px 0px 2px lightgreen;
@@ -308,6 +308,9 @@
             <button class="select" onclick="window.game.updateSelection('Vapor')">
                 <span><i class="fas fa-cloud"></i><br>Vapor</span>
             </button>
+            <button class="select" onclick="alert('Add your own element!');window.open('https://github.com/jackcruden/sand', '_blank');">
+                <span><i class="fas fa-plus"></i><br>Add</span>
+            </button>
         </div>
     </div>
 
@@ -328,6 +331,9 @@
             let stats = game.calculateStats()
 
             setStats({
+                'Sand': 'by Jack Cruden',
+                '______________________': '',
+                '                      ': '',
                 'State': stats.state,
                 'FPS': stats.fps,
                 'Selection': stats.selection,
@@ -344,7 +350,7 @@
             for (const [key, value] of Object.entries(values)) {
                 document.querySelector('#small-screen').innerHTML += key
 
-                for (let i = 0; i < 27 - (key.length + value.toString().length); i++) {
+                for (let i = 0; i < 22 - (key.length + value.toString().length); i++) {
                     document.querySelector('#small-screen').innerHTML += '.'
                 }
 
