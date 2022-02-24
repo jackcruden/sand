@@ -1,5 +1,5 @@
-import Mutator from '/Mutator.js'
-import * as Elements from '/global.js'
+import Mutator from './Mutator.js'
+import * as Elements from './global.js'
 
 export default class Game {
     // Setup

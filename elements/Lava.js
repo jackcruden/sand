@@ -1,8 +1,8 @@
 'use strict'
 
-import {State} from '/global.js'
-import Particle from '/elements/Particle.js'
-import Fire from '/elements/Fire.js'
+import {State} from '../global.js'
+import Particle from './Particle.js'
+import Fire from './Fire.js'
 
 export default class Lava extends Particle {
     constructor() {

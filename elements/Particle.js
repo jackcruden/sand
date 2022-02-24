@@ -1,6 +1,6 @@
 'use strict'
 
-import {State} from '/global.js'
+import {State} from '../global.js'
 
 export default class Particle {
     /**

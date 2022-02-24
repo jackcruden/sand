@@ -1,7 +1,7 @@
 'use strict'
 
-import {State} from '/global.js'
-import Particle from '/elements/Particle.js'
+import {State} from '../global.js'
+import Particle from './Particle.js'
 
 export default class Fire extends Particle {
     constructor(durability) {

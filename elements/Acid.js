@@ -1,8 +1,8 @@
 'use strict'
 
-import {State} from '/global.js'
-import Particle from '/elements/Particle.js'
-import Air from '/elements/Air.js'
+import {State} from '../global.js'
+import Particle from './Particle.js'
+import Air from './Air.js'
 
 export default class Acid extends Particle {
     constructor() {

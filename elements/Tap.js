@@ -1,8 +1,8 @@
 'use strict'
 
-import {State} from '/global.js'
-import Particle from '/elements/Particle.js'
-import * as Elements from '/global.js'
+import {State} from '../global.js'
+import Particle from './Particle.js'
+import * as Elements from '../global.js'
 
 export default class Tap extends Particle {
     constructor() {

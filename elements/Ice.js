@@ -1,8 +1,8 @@
 'use strict'
 
-import {State} from '/global.js'
-import Particle from '/elements/Particle.js'
-import Water from '/elements/Water.js'
+import {State} from '../global.js'
+import Particle from './Particle.js'
+import Water from './Water.js'
 
 export default class Ice extends Particle {
     constructor() {
